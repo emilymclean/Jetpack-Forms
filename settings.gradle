@@ -13,4 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Jetpack Forms"
+include ':form'
 include ':app'
