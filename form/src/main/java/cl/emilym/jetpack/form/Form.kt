@@ -2,10 +2,7 @@ package cl.emilym.jetpack.form
 
 import kotlinx.coroutines.flow.Flow
 
-interface Form {
-
-    var isValid: Flow<Boolean>
-    suspend fun validate(silent: Boolean): Boolean
+interface Form: Verifiable {
 
     suspend fun initialize(initializer: FormInitializer)
     fun <T> extract(extractor: FormExtractor<T>)

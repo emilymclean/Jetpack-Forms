@@ -2,13 +2,13 @@ package cl.emilym.jetpack.form
 
 import kotlinx.coroutines.flow.Flow
 
-interface FormField<T> {
+interface FormField<T>: Verifiable {
 
     val name: String
 
     var currentValue: T?
-    val liveValue: Flow<T>
+    val liveValue: Flow<T?>
 
-    val errorMessage: Flow<T>
+    val errorMessage: Flow<String?>
 
 }
