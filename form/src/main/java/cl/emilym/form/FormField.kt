@@ -12,9 +12,3 @@ interface FormField<T>: Verifiable {
     val errorMessage: Flow<String?>
 
 }
-
-interface MappedOutputFormField<O> {
-
-    val currentOutputValue: O?
-
-}

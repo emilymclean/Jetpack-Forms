@@ -53,16 +53,16 @@ data class LocalFileInfo(
 
 }
 
-data class RemoteFileInfo<RemoteReference>(
+data class RemoteFileInfo(
     override val uri: Uri,
     override val name: String,
     override val mimeType: String,
     override val size: Long,
-    val remoteReference: RemoteReference?
+    val remoteReference: Uri?
 ): FileInfo {
 
     companion object {
-        fun <RemoteReference> fromUri(uri: Uri, contentResolver: ContentResolver): RemoteFileInfo<RemoteReference>? {
+        fun fromUri(uri: Uri, contentResolver: ContentResolver): RemoteFileInfo? {
             val descriptor = LocalFileInfo.fromUri(uri, contentResolver) ?: return null
             return RemoteFileInfo(descriptor.uri, descriptor.name, descriptor.mimeType, descriptor.size, null)
         }
