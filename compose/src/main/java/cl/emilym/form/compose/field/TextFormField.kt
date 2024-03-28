@@ -49,7 +49,11 @@ fun TextFormFieldWidget(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = TextFieldDefaults.colors()
+    colors: TextFieldColors = TextFieldDefaults.colors(),
+    characterLimitDisplay: @Composable ((limit: Int, count: Int) -> Unit) = { limit, count ->
+        val characters = limit - count
+        Text(pluralStringResource(R.plurals.form_character_remaining, characters, characters))
+    }
 ) {
     val value by textFormField.liveValue.collectAsState(null)
     val characterLimit = (textFormField as? TextFormField)?.characterLimit ?: 0
@@ -63,8 +67,7 @@ fun TextFormFieldWidget(
                     Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.CenterEnd
                 ) {
-                    val characters = characterLimit - (value?.length ?: 0)
-                    Text(pluralStringResource(R.plurals.form_character_remaining, characters, characters))
+                    characterLimitDisplay(characterLimit, value?.length ?: 0)
                 }
             }
         }
