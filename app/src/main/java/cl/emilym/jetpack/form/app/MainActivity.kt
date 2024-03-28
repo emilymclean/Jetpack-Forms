@@ -16,12 +16,14 @@ import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
 import cl.emilym.form.compose.field.MultipleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.NumberFormFieldWidget
+import cl.emilym.form.compose.field.RadioFormFieldWidget
 import cl.emilym.form.compose.field.TextFormFieldWidget
 import cl.emilym.form.compose.model.SelectionOption
 import cl.emilym.form.field.CheckboxFormField
 import cl.emilym.form.field.DateFormField
 import cl.emilym.form.field.MultipleSelectionFormField
 import cl.emilym.form.field.NumberFormField
+import cl.emilym.form.field.SingleSelectionFormField
 import cl.emilym.form.field.TextFormField
 import cl.emilym.form.validator.CharacterMaximumValidator
 import cl.emilym.form.validator.RequiredValidator
@@ -31,11 +33,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val options = listOf(
+            SelectionOption(1, "One"),
+            SelectionOption(2, "Two"),
+            SelectionOption(3, "Three"),
+        )
+
         val textFormField = TextFormField("testText", listOf(CharacterMaximumValidator(100)))
         val checkboxFormField = CheckboxFormField("testCheckbox", listOf(RequiredValidator()))
         val dateFormField = DateFormField("testDate", listOf(), DateFormat.getDateInstance())
         val numberFormField = NumberFormField<Int>("testNumber", listOf())
         val multipleSelectionFormField = MultipleSelectionFormField<Int>("testMultiple", listOf())
+        val singleSelectionFormField = SingleSelectionFormField<Int>("testSingle", listOf())
 
         setContent {
             Column(
@@ -88,11 +97,16 @@ class MainActivity : AppCompatActivity() {
                 FormFieldLockup(multipleSelectionFormField.name) {
                     MultipleCheckboxFormFieldWidget(
                         multipleSelectionFormField,
-                        listOf(
-                            SelectionOption(1, "One"),
-                            SelectionOption(2, "Two"),
-                            SelectionOption(3, "Three"),
-                        )
+                        options
+                    ) {
+                        Text(it)
+                    }
+                }
+
+                FormFieldLockup(singleSelectionFormField.name) {
+                    RadioFormFieldWidget(
+                        singleSelectionFormField,
+                        options
                     ) {
                         Text(it)
                     }
