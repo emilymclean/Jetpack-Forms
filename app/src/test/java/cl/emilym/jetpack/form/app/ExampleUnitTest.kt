@@ -1,4 +1,4 @@
-package cl.emilym.jetpack.form.app
+package cl.emilym.form.app
 
 import org.junit.Test
 
