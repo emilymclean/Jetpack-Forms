@@ -20,8 +20,10 @@ import cl.emilym.form.field.TextFormField
 @Composable
 fun TextFormFieldWidget(
     textFormField: FormField<String>,
-    hint: String,
     modifier: Modifier = Modifier,
+    placeholder: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable () -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     enabled: Boolean = true,
 ) {
@@ -46,16 +48,13 @@ fun TextFormFieldWidget(
         TextField(
             value = value ?: "",
             onValueChange = { textFormField.currentValue = it },
-            placeholder = {
-                Text(
-                    hint,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            },
+            placeholder = placeholder,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = keyboardType
             ),
+            trailingIcon = trailingIcon,
+            leadingIcon = leadingIcon,
             isError = error,
             enabled = enabled
         )

@@ -35,8 +35,10 @@ import java.util.Date
 @Composable
 fun DateFormFieldWidget(
     field: FormField<Date>,
-    hint: String,
     modifier: Modifier = Modifier,
+    placeholder: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true
 ) {
     val value = field.liveValue.collectAsState(null).value?.let {
@@ -57,12 +59,7 @@ fun DateFormFieldWidget(
                 disabledPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 disabledSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
-            placeholder = {
-                Text(
-                    hint,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            },
+            placeholder = placeholder,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(
@@ -75,7 +72,8 @@ fun DateFormFieldWidget(
                         field.currentValue = it
                     }
                 },
-            trailingIcon = LocalFormConfig.current.datePickerTrailingIcon,
+            trailingIcon = trailingIcon,
+            leadingIcon = leadingIcon,
             isError = error,
         )
     }

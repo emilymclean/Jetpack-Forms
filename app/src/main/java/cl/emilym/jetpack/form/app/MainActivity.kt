@@ -15,10 +15,13 @@ import androidx.compose.ui.unit.dp
 import cl.emilym.form.compose.FormFieldLockup
 import cl.emilym.form.compose.field.CheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
+import cl.emilym.form.compose.field.NumberFormFieldWidget
 import cl.emilym.form.compose.field.TextFormFieldWidget
 import cl.emilym.form.field.CheckboxFormField
 import cl.emilym.form.field.DateFormField
+import cl.emilym.form.field.NumberFormField
 import cl.emilym.form.field.TextFormField
+import cl.emilym.form.validator.CharacterMaximumValidator
 import cl.emilym.form.validator.RequiredValidator
 import java.text.DateFormat
 
@@ -26,13 +29,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val textFormField = TextFormField.basic("Test", false)
+        val textFormField = TextFormField("Test", listOf(CharacterMaximumValidator(100)))
         val checkboxFormField = CheckboxFormField("Test Checkbox", listOf(RequiredValidator()))
         val dateFormField = DateFormField("Test Date", listOf(), DateFormat.getDateInstance())
+        val numberFormField = NumberFormField<Int>("Test Number", listOf())
 
         setContent {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 FormFieldLockup(
@@ -41,8 +47,7 @@ class MainActivity : AppCompatActivity() {
                     false
                 ) {
                     TextFormFieldWidget(
-                        textFormField,
-                        "Test Hint"
+                        textFormField
                     )
                 }
 
@@ -64,8 +69,16 @@ class MainActivity : AppCompatActivity() {
                     true
                 ) {
                     DateFormFieldWidget(
-                        dateFormField,
-                        "Enter a date"
+                        dateFormField
+                    )
+                }
+
+                FormFieldLockup(
+                    numberFormField.name,
+                    "This is a number form field test"
+                ) {
+                    NumberFormFieldWidget(
+                        numberFormField
                     )
                 }
             }

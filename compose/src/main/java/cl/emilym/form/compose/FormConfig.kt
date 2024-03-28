@@ -15,7 +15,6 @@ data class FormConfig(
     },
     @PluralsRes
     val charactersRemainingText: Int = R.plurals.form_character_remaining,
-    val datePickerTrailingIcon: (@Composable () -> Unit)? = null
 )
 
 val LocalFormConfig = staticCompositionLocalOf { FormConfig() }
