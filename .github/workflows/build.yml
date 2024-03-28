@@ -36,6 +36,10 @@ jobs:
     strategy:
       matrix:
         module: ["form", "compose"]
+        include:
+          - name: ""
+          - name: "compose-form"
+            module: "compose"
     needs:
       - version
     runs-on: ubuntu-latest
@@ -55,7 +59,7 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_version: ${{ needs.version.outputs.version }}
       - name: Rename AAR
-        run: mv ./${{ matrix.module }}/build/outputs/aar/${{ matrix.module }}-${{ needs.version.outputs.version }}.aar ./${{ matrix.module }}.aar
+        run: mv ./${{ matrix.module }}/build/outputs/aar/${{ matrix.name == "" && matrix.module || matrix.name }}-${{ needs.version.outputs.version }}.aar ./${{ matrix.module }}.aar
       - uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.module }}-aar
