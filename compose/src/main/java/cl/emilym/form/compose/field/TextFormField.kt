@@ -23,6 +23,7 @@ fun TextFormFieldWidget(
     hint: String,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
+    enabled: Boolean = true,
 ) {
     val value by textFormField.liveValue.collectAsState(null)
     val characterLimit = (textFormField as? TextFormField)?.characterLimit ?: 0
@@ -55,7 +56,8 @@ fun TextFormFieldWidget(
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = keyboardType
             ),
-            isError = error
+            isError = error,
+            enabled = enabled
         )
     }
 }
