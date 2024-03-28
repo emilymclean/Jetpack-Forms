@@ -1,12 +1,9 @@
 package cl.emilym.form.compose.field
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
@@ -19,12 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 import cl.emilym.component.compose.rdp
 import cl.emilym.form.FormField
+import cl.emilym.form.compose.helper.CheckboxText
 
 @Composable
-fun CheckboxFormFieldWidget(
+fun SingleCheckboxFormFieldWidget(
     field: FormField<Boolean>,
     modifier: Modifier = Modifier,
     colors: CheckboxColors = CheckboxDefaults.colors(),
@@ -33,31 +30,14 @@ fun CheckboxFormFieldWidget(
 ) {
     val value by field.liveValue.collectAsState(null)
     val errorMessage by field.errorMessage.collectAsState(null)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .toggleable(
-                value ?: false,
-                enabled = enabled,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                role = Role.Checkbox
-            ) { field.currentValue = it }
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(1.rdp)
+    CheckboxText(
+        value ?: false,
+        { field.currentValue = it },
+        modifier = modifier,
+        colors = colors,
+        enabled = enabled,
+        isError = errorMessage != null,
     ) {
-        Row {
-            content()
-        }
-        Checkbox(
-            checked = value ?: false,
-            onCheckedChange = null,
-            enabled = enabled,
-            colors = if (errorMessage == null) colors else CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.error,
-                uncheckedColor = MaterialTheme.colorScheme.error
-            )
-        )
+        content()
     }
 }

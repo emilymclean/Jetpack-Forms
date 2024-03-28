@@ -1,14 +1,21 @@
 package cl.emilym.form.compose.field
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import cl.emilym.form.FormField
 import cl.emilym.form.field.base.LabeledFormField
 
@@ -16,10 +23,24 @@ import cl.emilym.form.field.base.LabeledFormField
 inline fun <reified T: Number> NumberFormFieldWidget(
     field: FormField<T>,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = LocalTextStyle.current,
+    noinline label: @Composable (() -> Unit)? = null,
     noinline placeholder: (@Composable () -> Unit)? = null,
     noinline trailingIcon: (@Composable () -> Unit)? = null,
     noinline leadingIcon: (@Composable () -> Unit)? = null,
-    enabled: Boolean = true
+    noinline prefix: @Composable (() -> Unit)? = null,
+    noinline suffix: @Composable (() -> Unit)? = null,
+    noinline supportingText: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = TextFieldDefaults.shape,
+    colors: TextFieldColors = TextFieldDefaults.colors()
 ) {
     val decimal = when(T::class) {
         Double::class, Float::class -> true
@@ -42,15 +63,29 @@ inline fun <reified T: Number> NumberFormFieldWidget(
                     }
                 }
             },
-            placeholder = placeholder,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType =
                 if (decimal) KeyboardType.Decimal else KeyboardType.Number
             ),
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = textStyle,
+            label = label,
+            placeholder = placeholder,
             trailingIcon = trailingIcon,
             leadingIcon = leadingIcon,
+            prefix = prefix,
+            suffix = suffix,
+            supportingText = supportingText,
+            shape = shape,
+            colors = colors,
+            visualTransformation = visualTransformation,
+            keyboardActions = keyboardActions,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            interactionSource = interactionSource,
             isError = error,
-            enabled = true,
         )
     }
 }

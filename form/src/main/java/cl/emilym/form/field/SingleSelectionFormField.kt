@@ -6,12 +6,5 @@ import cl.emilym.form.field.base.SelectionFormField
 
 class SingleSelectionFormField<T>(
     override val name: String,
-    override val validators: List<Validator<T>>,
-    private val label: (T?) -> String?
-): SelectionFormField<T>(), LabeledFormField<T> {
-
-    override fun getLabel(value: T?): String? {
-        return label(value)
-    }
-
-}
+    override val validators: List<Validator<T>>
+): SelectionFormField<T>()

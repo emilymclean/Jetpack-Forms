@@ -12,9 +12,7 @@ import androidx.compose.ui.graphics.Color
 data class FormConfig(
     val errorMessage: @Composable RowScope.(String) -> Unit = {
         Text(it, style = MaterialTheme.typography.bodyMedium)
-    },
-    @PluralsRes
-    val charactersRemainingText: Int = R.plurals.form_character_remaining,
+    }
 )
 
 val LocalFormConfig = staticCompositionLocalOf { FormConfig() }

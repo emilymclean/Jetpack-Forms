@@ -10,16 +10,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import cl.emilym.form.compose.FormFieldLockup
-import cl.emilym.form.compose.field.CheckboxFormFieldWidget
+import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
+import cl.emilym.form.compose.field.MultipleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.NumberFormFieldWidget
+import cl.emilym.form.compose.field.RadioFormFieldWidget
 import cl.emilym.form.compose.field.TextFormFieldWidget
+import cl.emilym.form.compose.model.SelectionOption
 import cl.emilym.form.field.CheckboxFormField
 import cl.emilym.form.field.DateFormField
+import cl.emilym.form.field.MultipleSelectionFormField
 import cl.emilym.form.field.NumberFormField
+import cl.emilym.form.field.SingleSelectionFormField
 import cl.emilym.form.field.TextFormField
 import cl.emilym.form.validator.CharacterMaximumValidator
 import cl.emilym.form.validator.RequiredValidator
@@ -29,10 +33,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val textFormField = TextFormField("Test", listOf(CharacterMaximumValidator(100)))
-        val checkboxFormField = CheckboxFormField("Test Checkbox", listOf(RequiredValidator()))
-        val dateFormField = DateFormField("Test Date", listOf(), DateFormat.getDateInstance())
-        val numberFormField = NumberFormField<Int>("Test Number", listOf())
+        val options = listOf(
+            SelectionOption(1, "One"),
+            SelectionOption(2, "Two"),
+            SelectionOption(3, "Three"),
+        )
+
+        val textFormField = TextFormField("testText", listOf(CharacterMaximumValidator(100)))
+        val checkboxFormField = CheckboxFormField("testCheckbox", listOf(RequiredValidator()))
+        val dateFormField = DateFormField("testDate", listOf(), DateFormat.getDateInstance())
+        val numberFormField = NumberFormField<Int>("testNumber", listOf())
+        val multipleSelectionFormField = MultipleSelectionFormField<Int>("testMultiple", listOf())
+        val singleSelectionFormField = SingleSelectionFormField<Int>("testSingle", listOf())
 
         setContent {
             Column(
@@ -56,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     "This is a checkbox lockup test",
                     true
                 ) {
-                    CheckboxFormFieldWidget(
+                    SingleCheckboxFormFieldWidget(
                         checkboxFormField
                     ) {
                         Text("Something")
@@ -80,6 +92,24 @@ class MainActivity : AppCompatActivity() {
                     NumberFormFieldWidget(
                         numberFormField
                     )
+                }
+
+                FormFieldLockup(multipleSelectionFormField.name) {
+                    MultipleCheckboxFormFieldWidget(
+                        multipleSelectionFormField,
+                        options
+                    ) {
+                        Text(it)
+                    }
+                }
+
+                FormFieldLockup(singleSelectionFormField.name) {
+                    RadioFormFieldWidget(
+                        singleSelectionFormField,
+                        options
+                    ) {
+                        Text(it)
+                    }
                 }
             }
         }
