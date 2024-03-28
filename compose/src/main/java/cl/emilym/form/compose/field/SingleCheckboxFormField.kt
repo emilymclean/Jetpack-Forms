@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import cl.emilym.component.compose.rdp
 import cl.emilym.form.FormField
+import cl.emilym.form.compose.helper.CheckboxText
 
 @Composable
 fun SingleCheckboxFormFieldWidget(
@@ -29,31 +30,14 @@ fun SingleCheckboxFormFieldWidget(
 ) {
     val value by field.liveValue.collectAsState(null)
     val errorMessage by field.errorMessage.collectAsState(null)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .toggleable(
-                value ?: false,
-                enabled = enabled,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                role = Role.Checkbox
-            ) { field.currentValue = it }
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(1.rdp)
+    CheckboxText(
+        value ?: false,
+        { field.currentValue = it },
+        modifier = modifier,
+        colors = colors,
+        enabled = enabled,
+        isError = errorMessage != null,
     ) {
-        Row {
-            content()
-        }
-        Checkbox(
-            checked = value ?: false,
-            onCheckedChange = null,
-            enabled = enabled,
-            colors = if (errorMessage == null) colors else CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.error,
-                uncheckedColor = MaterialTheme.colorScheme.error
-            )
-        )
+        content()
     }
 }
