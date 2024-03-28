@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'cl.emilym.jetpack.form.app'
+    namespace 'cl.emilym.form.app'
     compileSdk 33
 
     defaultConfig {
