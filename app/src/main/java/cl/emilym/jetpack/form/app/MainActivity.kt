@@ -10,10 +10,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import cl.emilym.form.compose.FormFieldLockup
-import cl.emilym.form.compose.field.CheckboxFormFieldWidget
+import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
 import cl.emilym.form.compose.field.NumberFormFieldWidget
 import cl.emilym.form.compose.field.TextFormFieldWidget
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                     "This is a checkbox lockup test",
                     true
                 ) {
-                    CheckboxFormFieldWidget(
+                    SingleCheckboxFormFieldWidget(
                         checkboxFormField
                     ) {
                         Text("Something")
