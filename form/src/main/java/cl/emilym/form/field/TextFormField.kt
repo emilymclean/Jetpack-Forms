@@ -6,8 +6,12 @@ import cl.emilym.form.validator.*
 
 class TextFormField(
     override val name: String,
-    override val validators: List<Validator<String>>
+    override val validators: List<Validator<String>>,
 ): InputFormField<String>() {
+
+    val characterLimit by lazy {
+        validators.filterIsInstance(CharacterMaximumValidator::class.java).firstOrNull()?.maximum
+    }
 
     companion object {
 
