@@ -1,5 +1,6 @@
 package cl.emilym.form.compose
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.PluralsRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +14,8 @@ data class FormConfig(
         Text(it, style = MaterialTheme.typography.bodyMedium)
     },
     @PluralsRes
-    val charactersRemainingText: Int = R.plurals.form_character_remaining
+    val charactersRemainingText: Int = R.plurals.form_character_remaining,
+    val datePickerTrailingIcon: (@Composable () -> Unit)? = null
 )
 
 val LocalFormConfig = staticCompositionLocalOf { FormConfig() }
