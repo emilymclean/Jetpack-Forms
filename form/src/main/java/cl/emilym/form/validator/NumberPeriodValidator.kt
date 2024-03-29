@@ -9,6 +9,11 @@ class NumberPeriodValidator<T>(
     private val minimum: T? = null
 ): Validator<T> where T: Number, T: Comparable<T> {
 
+    init {
+        if (maximum == null && minimum == null)
+            throw java.lang.IllegalArgumentException("Must provide either a minimum and/or a maximum number")
+    }
+
     override fun validate(value: T?): ValidationResult {
         if (value == null) return ValidationResult.Valid
         if (minimum != null && value < minimum) return ValidationResult.Invalid(message)
