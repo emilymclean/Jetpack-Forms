@@ -10,9 +10,7 @@ abstract class InputFormField<T>: BaseFormField<T>() {
         set(value) {
             field = value
             _liveValue.tryEmit(field)
-            if (errorMessage.value != null) {
-                doValidation(false)
-            }
+            doValidation(errorMessage.value == null)
         }
 
     private val _liveValue = MutableStateFlow<T?>(null)
