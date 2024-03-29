@@ -5,7 +5,7 @@ import cl.emilym.form.Validator
 
 class EnforceValueValidator<T>(
     private val message: String,
-    private val requiredValue: T
+    private val requiredValue: T?
 ): Validator<T> {
 
     override fun validate(value: T?): ValidationResult {

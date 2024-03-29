@@ -3,6 +3,7 @@ package cl.emilym.form.validator
 import android.util.Patterns
 import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
+import java.util.regex.Pattern
 
 class EmailValidator(
     private val message: String = "Email is invalid"
