@@ -1,5 +1,6 @@
 package cl.emilym.form.field.file
 
+import android.content.ContentResolver
 import android.net.Uri
 import cl.emilym.form.FormField
 import cl.emilym.form.ValidationResult
@@ -26,6 +27,7 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
     val liveState: Flow<List<FileState<T>>>
 
     fun addFile(file: T)
+    fun addFile(uri: Uri, contentResolver: ContentResolver)
     fun removeFile(file: T)
 
     val fileCountRequired: IntRange?
@@ -36,7 +38,7 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
 
 interface RetryableFileFormField<T: FileInfo> {
 
-    fun retryFile(file: T)
+    fun retryFile(file: FileInfo)
 
 }
 

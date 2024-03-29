@@ -4,4 +4,11 @@
         <item quantity="one">%1$s character remaining</item>
         <item quantity="other">%1$s characters remaining</item>
     </plurals>
+
+    <string name="form_file_upload_title">Choose a file</string>
+    <string name="form_file_upload_file_metadata">(%1$s, %2$s)</string>
+    <plurals name="form_file_upload_requirements">
+        <item quantity="one">Your file must be a %1$s file under %2$s</item>
+        <item quantity="other">Your files must be a %1$s file and under %2$s</item>
+    </plurals>
 </resources>
