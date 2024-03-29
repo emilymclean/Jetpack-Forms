@@ -14,7 +14,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  lint:
+  unit-test:
     strategy:
       matrix:
         module: ["form", "compose"]
