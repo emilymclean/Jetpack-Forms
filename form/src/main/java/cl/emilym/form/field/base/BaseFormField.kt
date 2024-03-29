@@ -12,11 +12,11 @@ abstract class BaseFormField<T>: FormField<T> {
 
     protected abstract val validators: List<Validator<T>>
 
-    override suspend fun validate(silent: Boolean): Boolean {
+    final override suspend fun validate(silent: Boolean): Boolean {
         return doValidation(silent)
     }
 
-    protected fun doValidation(silent: Boolean): Boolean {
+    protected open fun doValidation(silent: Boolean): Boolean {
         val failed = validators
             .map { it.validate(currentValue) }
             .filterIsInstance<ValidationResult.Invalid>()
