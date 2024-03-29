@@ -5,19 +5,32 @@ import cl.emilym.form.FormField
 import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 import cl.emilym.form.field.base.BaseFormField
+import cl.emilym.form.validator.file.FileCountValidator
+import cl.emilym.form.validator.file.FileMimeTypeValidator
+import cl.emilym.form.validator.file.FileSizeValidator
 import cl.emilym.form.validator.file.FileStateValidator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.lang.UnsupportedOperationException
 
 interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
 
-    var currentState: List<FileState<T>>
+    val currentState: List<FileState<T>>
     val liveState: Flow<List<FileState<T>>>
 
     fun addFile(file: T)
     fun removeFile(file: T)
+
+    val fileCountRequired: IntRange?
+    val fileSize: LongRange?
+    val acceptableMimeTypes: List<String>?
 
 }
 
@@ -30,11 +43,12 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
     final override val validators: List<Validator<List<Uri>>>
         get() = listOf()
 
-    override var currentState: List<FileState<T>> = listOf()
+    protected var _currentState: List<FileState<T>> = listOf()
         set(value) {
             field = value
             _liveState.tryEmit(field)
         }
+    override val currentState: List<FileState<T>> get() = _currentState
 
     private val _liveState = MutableStateFlow<List<FileState<T>>>(listOf())
     final override val liveState: Flow<List<FileState<T>>> = _liveState
@@ -58,6 +72,43 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
         return presentValidation(fileValidationResults + filesValidationResults + stateValidationResults, silent)
     }
 
+    protected fun fileValid(file: T): String? {
+        return fileValidators.map { it.validate(file) }
+            .filterIsInstance<ValidationResult.Invalid>()
+            .firstOrNull()?.message
+    }
+
+    override val fileCountRequired: IntRange? by lazy {
+        val validator = filesValidators.filterIsInstance<FileCountValidator<*>>().firstOrNull()
+        validator ?: return@lazy null
+        return@lazy IntRange(validator.minimum ?: 0, (validator.maximum ?: Int.MAX_VALUE))
+    }
+    override val fileSize: LongRange? by lazy {
+        val validator = fileValidators.filterIsInstance<FileSizeValidator<*>>().firstOrNull()
+        validator ?: return@lazy null
+        return@lazy LongRange(0, validator.maximumSize)
+    }
+    override val acceptableMimeTypes: List<String>? by lazy {
+        val validator = fileValidators.filterIsInstance<FileMimeTypeValidator<*>>().firstOrNull()
+        validator ?: return@lazy null
+        return@lazy validator.acceptableMimeTypes
+    }
+
     protected abstract fun toUri(file: T): Uri?
+
+}
+
+abstract class ConcurrentBaseFileFormField<T: FileInfo>(): BaseFileFormField<T>() {
+
+    protected open val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job())
+    private val stateLock = Mutex()
+
+    protected fun updateState(operation: (List<FileState<T>>) -> List<FileState<T>>) {
+        scope.launch {
+            stateLock.withLock {
+                _currentState = operation(_currentState)
+            }
+        }
+    }
 
 }
