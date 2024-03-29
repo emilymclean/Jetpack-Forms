@@ -55,6 +55,9 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
         set(value) {
             field = value
             _liveState.tryEmit(field)
+            if (errorMessage.value != null) {
+                doValidation(false)
+            }
         }
     override val currentState: List<FileState<T>> get() = _currentState
 

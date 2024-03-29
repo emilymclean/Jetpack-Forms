@@ -13,21 +13,25 @@ abstract class BaseFormField<T>: FormField<T> {
     protected abstract val validators: List<Validator<T>>
 
     override suspend fun validate(silent: Boolean): Boolean {
+        return doValidation(silent)
+    }
+
+    protected fun doValidation(silent: Boolean): Boolean {
         val failed = validators
             .map { it.validate(currentValue) }
             .filterIsInstance<ValidationResult.Invalid>()
         return presentValidation(failed, silent)
     }
 
-    protected suspend fun presentValidation(
+    protected fun presentValidation(
         failed: List<ValidationResult.Invalid>,
         silent: Boolean
     ): Boolean {
         val valid = failed.isEmpty()
-        isValid.emit(valid)
+        isValid.tryEmit(valid)
 
         if (!silent) {
-            errorMessage.emit(failed.firstOrNull()?.message)
+            errorMessage.tryEmit(failed.firstOrNull()?.message)
         }
 
         return valid
