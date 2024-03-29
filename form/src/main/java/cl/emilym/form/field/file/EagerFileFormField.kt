@@ -8,7 +8,7 @@ class EagerFileFormField(
     override val fileValidators: List<Validator<RemoteFileInfo>>,
     override val filesValidators: List<Validator<List<RemoteFileInfo>>>,
     private val controller: EagerFileFormFieldController<RemoteFileInfo>,
-    override val blocking: Boolean = false
+    override val singleThread: Boolean = false
 ): ConcurrentBaseFileFormField<RemoteFileInfo>(), RetryableFileFormField<RemoteFileInfo> {
 
     override fun addFile(file: RemoteFileInfo) {

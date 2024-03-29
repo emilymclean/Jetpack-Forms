@@ -12,7 +12,7 @@ class LazyFileFormField(
     override val name: String,
     override val fileValidators: List<Validator<LocalFileInfo>>,
     override val filesValidators: List<Validator<List<LocalFileInfo>>>,
-    override val blocking: Boolean = false
+    override val singleThread: Boolean = false
 ): ConcurrentBaseFileFormField<LocalFileInfo>() {
 
     override fun addFile(file: LocalFileInfo) {
