@@ -72,7 +72,9 @@ fun <T: FileInfo> FileFormFieldWidget(
     uploadInstructionContent: String? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    contentVariantColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     accentColor: Color = MaterialTheme.colorScheme.primary,
+    errorColor: Color = MaterialTheme.colorScheme.error,
     border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
     shape: Shape = RoundedCornerShape(1.rdp),
 ) {
@@ -114,7 +116,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                     when {
                         border != null && error -> Modifier.border(
                             border.copy(
-                                brush = SolidColor(MaterialTheme.colorScheme.error)
+                                brush = SolidColor(errorColor)
                             ), shape
                         )
 
@@ -178,7 +180,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                     FlowRow(horizontalArrangement = Arrangement.spacedBy(0.5.rdp)) {
                                         Text(
                                             fileState.file.name, color = when (fileState) {
-                                                is FileState.Failed, is FileState.Invalid -> MaterialTheme.colorScheme.error
+                                                is FileState.Failed, is FileState.Invalid -> errorColor
                                                 else -> contentColor
                                             },
                                             style = MaterialTheme.typography.bodyMedium
@@ -190,7 +192,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                                     .getExtensionFromMimeType(fileState.file.mimeType) ?: "",
                                                 HumanReadableBytes.si(fileState.file.size)
                                             ),
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = contentVariantColor,
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
@@ -203,7 +205,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                             if (fileState is FileState.Complete) {
                                                 Icon(painterResource(R.drawable.ic_delete), contentDescription = "Delete icon", tint = accentColor)
                                             } else {
-                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Invalid icon", tint = MaterialTheme.colorScheme.error)
+                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Invalid icon", tint = errorColor)
                                             }
                                         }
                                         is FileState.Waiting -> IconButton(onClick = { field.removeFile(fileState.file) }) {
@@ -214,11 +216,11 @@ fun <T: FileInfo> FileFormFieldWidget(
                                             IconButton(onClick = {
                                                 field.removeFile(fileState.file)
                                             }) {
-                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Cancel upload icon", tint = MaterialTheme.colorScheme.error)
+                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Cancel upload icon", tint = errorColor)
                                             }
                                             if (field is RetryableFileFormField<*>) {
                                                 IconButton(onClick = { field.retryFile(fileState.file) }) {
-                                                    Icon(painterResource(R.drawable.ic_retry), "Retry icon", tint = MaterialTheme.colorScheme.error)
+                                                    Icon(painterResource(R.drawable.ic_retry), "Retry icon", tint = errorColor)
                                                 }
                                             }
                                         }
