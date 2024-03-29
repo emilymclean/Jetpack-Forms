@@ -10,7 +10,9 @@ class PokoFormExtractor<T: Any>(
 ): FormExtractor<T> {
 
     override fun extract(fields: List<FormField<*>>): T {
-        val map = fields.associate { it.name.lowercase() to it.currentValue }
+        val map = fields.associate {
+            it.name.lowercase() to it.currentValue
+        }
         val constructor = target.constructors.last()
         val args: Map<KParameter, Any?> = constructor.parameters.associateWith { map[it.name?.lowercase()] }
         return constructor.callBy(args)
