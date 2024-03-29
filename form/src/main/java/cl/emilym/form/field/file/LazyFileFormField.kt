@@ -4,6 +4,10 @@ import android.net.Uri
 import cl.emilym.form.Validator
 import kotlinx.coroutines.sync.Mutex
 
+/**
+ * LazyFileFormField returns the local URI of a file, expecting whatever consumes it to upload it
+ * or process it as needed
+ */
 class LazyFileFormField(
     override val name: String,
     override val fileValidators: List<Validator<LocalFileInfo>>,
@@ -31,5 +35,5 @@ class LazyFileFormField(
     override fun toUri(file: LocalFileInfo): Uri {
         return file.uri
     }
-    
+
 }

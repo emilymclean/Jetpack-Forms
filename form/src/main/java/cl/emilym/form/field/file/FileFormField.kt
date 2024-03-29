@@ -34,6 +34,12 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
 
 }
 
+interface RetryableFileFormField<T: FileInfo> {
+
+    fun retryFile(file: T)
+
+}
+
 abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileFormField<T> {
 
     abstract val fileValidators: List<Validator<T>>
