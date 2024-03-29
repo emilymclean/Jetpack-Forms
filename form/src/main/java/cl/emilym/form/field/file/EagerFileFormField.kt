@@ -1,5 +1,6 @@
 package cl.emilym.form.field.file
 
+import android.content.ContentResolver
 import android.net.Uri
 import cl.emilym.form.Validator
 
@@ -10,6 +11,10 @@ class EagerFileFormField(
     private val controller: EagerFileFormFieldController<RemoteFileInfo>,
     override val singleThread: Boolean = false
 ): ConcurrentBaseFileFormField<RemoteFileInfo>(), RetryableFileFormField<RemoteFileInfo> {
+
+    override fun addFile(uri: Uri, contentResolver: ContentResolver) {
+        addFile(RemoteFileInfo.fromUri(uri, contentResolver) ?: return)
+    }
 
     override fun addFile(file: RemoteFileInfo) {
         val message = fileValid(file)
@@ -36,7 +41,8 @@ class EagerFileFormField(
         }
     }
 
-    override fun retryFile(file: RemoteFileInfo) {
+    override fun retryFile(file: FileInfo) {
+        if (file !is RemoteFileInfo) return
         val message = fileValid(file)
         val state = if (message == null) {
             FileState.Waiting(file)

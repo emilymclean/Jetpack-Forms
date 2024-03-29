@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import cl.emilym.form.compose.FormFieldLockup
 import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
+import cl.emilym.form.compose.field.FileFormFieldWidget
 import cl.emilym.form.compose.field.MultipleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.NumberFormFieldWidget
 import cl.emilym.form.compose.field.RadioFormFieldWidget
@@ -25,8 +26,11 @@ import cl.emilym.form.field.MultipleSelectionFormField
 import cl.emilym.form.field.NumberFormField
 import cl.emilym.form.field.SingleSelectionFormField
 import cl.emilym.form.field.TextFormField
+import cl.emilym.form.field.file.LazyFileFormField
 import cl.emilym.form.validator.CharacterMaximumValidator
 import cl.emilym.form.validator.RequiredValidator
+import cl.emilym.form.validator.file.FileCountValidator
+import cl.emilym.form.validator.file.FileMimeTypeValidator
 import java.text.DateFormat
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +49,11 @@ class MainActivity : AppCompatActivity() {
         val numberFormField = NumberFormField<Int>("testNumber", listOf())
         val multipleSelectionFormField = MultipleSelectionFormField<Int>("testMultiple", listOf())
         val singleSelectionFormField = SingleSelectionFormField<Int>("testSingle", listOf())
+        val fileFormField = LazyFileFormField(
+            "testFiles",
+            listOf(FileMimeTypeValidator(listOf("image/jpeg", "image/png"))),
+            listOf(FileCountValidator(1, 5, "Must have between 1 and 5 files")),
+        )
 
         setContent {
             Column(
@@ -110,6 +119,12 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         Text(it)
                     }
+                }
+
+                FormFieldLockup(fileFormField.name) {
+                    FileFormFieldWidget(
+                        fileFormField,
+                    )
                 }
             }
         }
