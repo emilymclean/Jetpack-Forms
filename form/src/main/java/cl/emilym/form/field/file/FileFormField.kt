@@ -1,5 +1,6 @@
 package cl.emilym.form.field.file
 
+import android.content.ContentResolver
 import android.net.Uri
 import cl.emilym.form.FormField
 import cl.emilym.form.ValidationResult
@@ -26,6 +27,7 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
     val liveState: Flow<List<FileState<T>>>
 
     fun addFile(file: T)
+    fun addFile(uri: Uri, contentResolver: ContentResolver)
     fun removeFile(file: T)
 
     val fileCountRequired: IntRange?
@@ -36,7 +38,7 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
 
 interface RetryableFileFormField<T: FileInfo> {
 
-    fun retryFile(file: T)
+    fun retryFile(file: FileInfo)
 
 }
 
@@ -106,13 +108,23 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
 
 abstract class ConcurrentBaseFileFormField<T: FileInfo>(): BaseFileFormField<T>() {
 
+    protected open val singleThread: Boolean = false
+
     protected open val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job())
     private val stateLock = Mutex()
 
-    protected fun updateState(operation: (List<FileState<T>>) -> List<FileState<T>>) {
-        scope.launch {
-            stateLock.withLock {
-                _currentState = operation(_currentState)
+    protected fun updateState(afterUpdate: () -> Unit = {}, operation: (List<FileState<T>>) -> List<FileState<T>>) {
+        val task = {
+            _currentState = operation(_currentState)
+            afterUpdate()
+        }
+        if (singleThread) {
+            task()
+        } else {
+            scope.launch {
+                stateLock.withLock {
+                    task()
+                }
             }
         }
     }

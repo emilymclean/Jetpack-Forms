@@ -9,13 +9,13 @@ class FileCountValidator<T: FileInfo>(
     val minimum: Int?,
     val maximum: Int?,
     val message: String
-): Validator<List<FileState<T>>> {
+): Validator<List<T>> {
 
     init {
         if (minimum == null && maximum == null) throw IllegalStateException("Must set either/or minimum and maximum")
     }
 
-    override fun validate(value: List<FileState<T>>?): ValidationResult {
+    override fun validate(value: List<T>?): ValidationResult {
         value ?: return ValidationResult.Valid
         if (minimum != null && value.size < minimum) return ValidationResult.Invalid(message)
         if (maximum != null && value.size > maximum) return ValidationResult.Invalid(message)

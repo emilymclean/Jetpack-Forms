@@ -1,5 +1,6 @@
 package cl.emilym.form.field.file
 
+import android.content.ContentResolver
 import android.net.Uri
 import cl.emilym.form.Validator
 import kotlinx.coroutines.sync.Mutex
@@ -11,8 +12,13 @@ import kotlinx.coroutines.sync.Mutex
 class LazyFileFormField(
     override val name: String,
     override val fileValidators: List<Validator<LocalFileInfo>>,
-    override val filesValidators: List<Validator<List<LocalFileInfo>>>
+    override val filesValidators: List<Validator<List<LocalFileInfo>>>,
+    override val singleThread: Boolean = false
 ): ConcurrentBaseFileFormField<LocalFileInfo>() {
+
+    override fun addFile(uri: Uri, contentResolver: ContentResolver) {
+        addFile(LocalFileInfo.fromUri(uri, contentResolver) ?: return)
+    }
 
     override fun addFile(file: LocalFileInfo) {
         val message = fileValid(file)
@@ -28,7 +34,7 @@ class LazyFileFormField(
 
     override fun removeFile(file: LocalFileInfo) {
         updateState {
-            it.filter { it.file == file }
+            it.filterNot { it.file == file }
         }
     }
 

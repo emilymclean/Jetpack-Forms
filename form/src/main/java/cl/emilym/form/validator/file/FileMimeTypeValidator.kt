@@ -12,8 +12,8 @@ class FileMimeTypeValidator<T: FileInfo>(
     override fun validate(value: T?): ValidationResult {
         value ?: return ValidationResult.Valid
         return when (acceptableMimeTypes.contains(value.mimeType)) {
-            false -> ValidationResult.Valid
-            true -> ValidationResult.Invalid(message)
+            true -> ValidationResult.Valid
+            false -> ValidationResult.Invalid(message)
         }
     }
 }

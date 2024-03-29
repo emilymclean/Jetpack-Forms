@@ -1,5 +1,6 @@
 package cl.emilym.form.field.file
 
+import android.content.ContentResolver
 import android.net.Uri
 import cl.emilym.form.Validator
 
@@ -7,8 +8,13 @@ class EagerFileFormField(
     override val name: String,
     override val fileValidators: List<Validator<RemoteFileInfo>>,
     override val filesValidators: List<Validator<List<RemoteFileInfo>>>,
-    private val controller: EagerFileFormFieldController<RemoteFileInfo>
+    private val controller: EagerFileFormFieldController<RemoteFileInfo>,
+    override val singleThread: Boolean = false
 ): ConcurrentBaseFileFormField<RemoteFileInfo>(), RetryableFileFormField<RemoteFileInfo> {
+
+    override fun addFile(uri: Uri, contentResolver: ContentResolver) {
+        addFile(RemoteFileInfo.fromUri(uri, contentResolver) ?: return)
+    }
 
     override fun addFile(file: RemoteFileInfo) {
         val message = fileValid(file)
@@ -17,33 +23,40 @@ class EagerFileFormField(
         } else {
             FileState.Invalid(file, message)
         }
-        updateState {
-            it + state.also {
+        updateState(
+            afterUpdate = {
+                if (state !is FileState.Waiting) return@updateState
                 controller.upload(file, ::controllerCallback)
             }
+        ) {
+            it + state
         }
     }
 
     override fun removeFile(file: RemoteFileInfo) {
         updateState {
-            it.filter { it.file == file }.also {
+            it.filterNot { it.file == file }.also {
                 controller.delete(file)
             }
         }
     }
 
-    override fun retryFile(file: RemoteFileInfo) {
+    override fun retryFile(file: FileInfo) {
+        if (file !is RemoteFileInfo) return
         val message = fileValid(file)
         val state = if (message == null) {
             FileState.Waiting(file)
         } else {
             FileState.Invalid(file, message)
         }
-        updateState {
+        updateState(
+            afterUpdate = {
+                if (state !is FileState.Waiting) return@updateState
+                controller.retry(file, ::controllerCallback)
+            }
+        ) {
             it.replace(state) {
                 it.file == file
-            }.also {
-                controller.retry(file, ::controllerCallback)
             }
         }
     }
@@ -52,7 +65,7 @@ class EagerFileFormField(
         updateState {
             it.replace(state) {
                 it.file == state.file
-            }
+            }.also { print(it) }
         }
     }
 
