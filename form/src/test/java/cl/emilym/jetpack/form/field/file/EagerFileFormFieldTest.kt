@@ -5,6 +5,8 @@ import cl.emilym.form.field.file.EagerFileFormField
 import cl.emilym.form.field.file.EagerFileFormFieldCallback
 import cl.emilym.form.field.file.EagerFileFormFieldController
 import cl.emilym.form.field.file.FileState
+import cl.emilym.form.field.file.LazyFileFormField
+import cl.emilym.form.field.file.LocalFileInfo
 import cl.emilym.form.field.file.RemoteFileInfo
 import cl.emilym.form.validator.file.FileCountValidator
 import cl.emilym.form.validator.file.FileMimeTypeValidator
@@ -55,6 +57,36 @@ class EagerFileFormFieldTest {
         val currentState = validator.currentState
         assertEquals(1, currentState.size)
         assert(currentState.first() is FileState.Waiting)
+    }
+
+    @Test
+    fun `addFile with invalid file should update state to Invalid`() {
+        val validator = EagerFileFormField(
+            "files",
+            listOf(FileMimeTypeValidator(listOf("image/jpeg", "image/png"))),
+            listOf(FileCountValidator(1, 5, "Must have between 1 and 5 files")),
+            object : EagerFileFormFieldController<RemoteFileInfo> {
+                override fun upload(file: RemoteFileInfo, callback: EagerFileFormFieldCallback<RemoteFileInfo>) {
+                    callback(FileState.Waiting(file))
+                }
+
+                override fun delete(file: RemoteFileInfo) {
+                    // Do nothing for testing
+                }
+
+                override fun retry(file: RemoteFileInfo, callback: EagerFileFormFieldCallback<RemoteFileInfo>) {
+                    // Do nothing for testing
+                }
+            },
+            true
+        )
+
+        val file = RemoteFileInfo(uri, "image.gif", "image/gif", 100L, null)
+        validator.addFile(file)
+
+        val currentState = validator.currentState
+        assertEquals(1, currentState.size)
+        assert(currentState.first() is FileState.Invalid)
     }
 
     @Test
@@ -119,7 +151,6 @@ class EagerFileFormFieldTest {
 
         val currentState = validator.currentState
         assertEquals(1, currentState.size)
-        print(currentState.first())
         assert(currentState.first() is FileState.Complete)
     }
 

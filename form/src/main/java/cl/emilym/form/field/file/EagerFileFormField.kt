@@ -20,6 +20,7 @@ class EagerFileFormField(
         }
         updateState(
             afterUpdate = {
+                if (state !is FileState.Waiting) return@updateState
                 controller.upload(file, ::controllerCallback)
             }
         ) {
@@ -44,6 +45,7 @@ class EagerFileFormField(
         }
         updateState(
             afterUpdate = {
+                if (state !is FileState.Waiting) return@updateState
                 controller.retry(file, ::controllerCallback)
             }
         ) {

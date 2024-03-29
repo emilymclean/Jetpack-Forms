@@ -47,6 +47,23 @@ class LazyFileFormFieldTest {
     }
 
     @Test
+    fun `addFile with invalid file should update state to Invalid`() {
+        val validator = LazyFileFormField(
+            "files",
+            listOf(FileMimeTypeValidator(listOf("image/jpeg", "image/png"))),
+            listOf(FileCountValidator(1, 5, "Must have between 1 and 5 files")),
+            true
+        )
+
+        val file = LocalFileInfo(uri, "image.gif", "image/gif", 100L)
+        validator.addFile(file)
+
+        val currentState = validator.currentState
+        assertEquals(1, currentState.size)
+        assert(currentState.first() is FileState.Invalid)
+    }
+
+    @Test
     fun `removeFile should update state by removing the specified file`() {
         val file1 = LocalFileInfo(uri, "file1.jpg", "image/jpeg", 200L)
         val file2 = LocalFileInfo(uri2, "file2.jpg", "image/jpeg", 300L)
