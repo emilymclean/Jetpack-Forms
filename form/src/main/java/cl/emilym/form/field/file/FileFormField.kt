@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.lang.UnsupportedOperationException
@@ -106,13 +107,23 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
 
 abstract class ConcurrentBaseFileFormField<T: FileInfo>(): BaseFileFormField<T>() {
 
+    protected open val blocking: Boolean = false
+
     protected open val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job())
     private val stateLock = Mutex()
 
-    protected fun updateState(operation: (List<FileState<T>>) -> List<FileState<T>>) {
-        scope.launch {
-            stateLock.withLock {
-                _currentState = operation(_currentState)
+    protected fun updateState(afterUpdate: () -> Unit = {}, operation: (List<FileState<T>>) -> List<FileState<T>>) {
+        val task = {
+            _currentState = operation(_currentState)
+            afterUpdate()
+        }
+        if (blocking) {
+            task()
+        } else {
+            scope.launch {
+                stateLock.withLock {
+                    task()
+                }
             }
         }
     }

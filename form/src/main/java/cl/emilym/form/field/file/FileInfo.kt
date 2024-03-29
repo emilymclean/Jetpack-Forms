@@ -4,14 +4,14 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
 
-sealed class FileState<T: FileInfo>(
-    val file: T
-) {
-    class Complete<T: FileInfo>(file: T): FileState<T>(file)
-    class Progress<T: FileInfo>(file: T, val progress: Double): FileState<T>(file)
-    class Failed<T: FileInfo>(file: T, val e: Exception): FileState<T>(file)
-    class Invalid<T: FileInfo>(file: T, val reason: String): FileState<T>(file)
-    class Waiting<T: FileInfo>(file: T): FileState<T>(file)
+sealed class FileState<T: FileInfo> {
+    abstract val file: T
+
+    data class Complete<T: FileInfo>(override val file: T): FileState<T>()
+    data class Progress<T: FileInfo>(override val file: T, val progress: Double): FileState<T>()
+    data class Failed<T: FileInfo>(override val file: T, val e: Exception): FileState<T>()
+    data class Invalid<T: FileInfo>(override val file: T, val reason: String): FileState<T>()
+    data class Waiting<T: FileInfo>(override val file: T): FileState<T>()
 }
 
 interface FileInfo {
@@ -51,6 +51,20 @@ data class LocalFileInfo(
 
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LocalFileInfo
+
+        return uri == other.uri && name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return uri.hashCode()
+    }
+
+
 }
 
 data class RemoteFileInfo(
@@ -66,6 +80,19 @@ data class RemoteFileInfo(
             val descriptor = LocalFileInfo.fromUri(uri, contentResolver) ?: return null
             return RemoteFileInfo(descriptor.uri, descriptor.name, descriptor.mimeType, descriptor.size, null)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RemoteFileInfo
+
+        return uri == other.uri && name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return uri.hashCode()
     }
 
 
