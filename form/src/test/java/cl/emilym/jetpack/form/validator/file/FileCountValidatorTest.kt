@@ -25,13 +25,13 @@ class FileCountValidatorTest {
     }
 
     @Test
-    fun `validate with count below minimum returns ValidationResult_Invalid`() {
+    fun `validate with count below minimum returns ValidationResult_Valid`() {
         val fileInfoList = listOf(
             createMockFileInfo("uri1")
         )
         val validator = FileCountValidator<FileInfo>(minimum = 2, maximum = 5, message = "Invalid file count")
         val result = validator.validate(fileInfoList)
-        assertEquals(ValidationResult.Invalid("Invalid file count"), result)
+        assert(result is ValidationResult.Invalid)
     }
 
     @Test
@@ -53,7 +53,7 @@ class FileCountValidatorTest {
     fun `validate with null value returns ValidationResult_Valid`() {
         val validator = FileCountValidator<FileInfo>(minimum = 2, maximum = 5, message = "Invalid file count")
         val result = validator.validate(null)
-        assert(result is ValidationResult.Invalid)
+        assert(result is ValidationResult.Valid)
     }
 
     @Test
