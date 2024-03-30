@@ -7,4 +7,8 @@ import cl.emilym.form.field.base.InputFormField
 class CheckboxFormField(
     override val name: String,
     override val validators: List<Validator<Boolean>>
-): InputFormField<Boolean>()
+): InputFormField<Boolean>() {
+
+    override val initialValue: Boolean = true
+
+}

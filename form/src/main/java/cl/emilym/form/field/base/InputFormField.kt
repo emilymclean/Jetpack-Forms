@@ -6,7 +6,9 @@ import kotlinx.coroutines.runBlocking
 
 abstract class InputFormField<T>: BaseFormField<T>() {
 
-    override var currentValue: T? = null
+    protected open val initialValue: T? = null
+
+    override var currentValue: T? = initialValue
         set(value) {
             field = value
             _liveValue.tryEmit(field)
