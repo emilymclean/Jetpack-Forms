@@ -37,7 +37,7 @@ class BlankValidatorTest {
 
         // Assert
         assert(result is ValidationResult.Invalid)
-        assertEquals("Field cannot be blank", (result as ValidationResult.Invalid).message)
+        assertEquals("Field is required", (result as ValidationResult.Invalid).message)
     }
 
     @Test
