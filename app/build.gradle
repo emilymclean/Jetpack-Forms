@@ -39,6 +39,7 @@ android {
 dependencies {
     implementation project(":compose")
     implementation project(":form")
+    implementation libs.bytes
 
     // Base
     implementation libs.androidx.core.ktx

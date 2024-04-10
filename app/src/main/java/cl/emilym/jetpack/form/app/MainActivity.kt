@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cl.emilym.bytes.HumanReadableBytes
 import cl.emilym.form.compose.FormFieldLockup
 import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
@@ -21,7 +22,6 @@ import cl.emilym.form.compose.field.MultipleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.NumberFormFieldWidget
 import cl.emilym.form.compose.field.RadioFormFieldWidget
 import cl.emilym.form.compose.field.TextFormFieldWidget
-import cl.emilym.form.compose.helper.HumanReadableBytes
 import cl.emilym.form.compose.model.SelectionOption
 import cl.emilym.form.field.CheckboxFormField
 import cl.emilym.form.field.DateFormField
