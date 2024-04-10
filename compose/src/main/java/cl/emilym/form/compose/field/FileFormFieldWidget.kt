@@ -7,7 +7,6 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -25,7 +24,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -50,14 +48,12 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cl.emilym.bytes.HumanReadableBytes
 import cl.emilym.component.compose.rdp
 import cl.emilym.form.compose.R
-import cl.emilym.form.compose.helper.HumanReadableBytes
-import cl.emilym.form.field.TextFormField
 import cl.emilym.form.field.file.FileFormField
 import cl.emilym.form.field.file.FileInfo
 import cl.emilym.form.field.file.FileState
@@ -72,7 +68,9 @@ fun <T: FileInfo> FileFormFieldWidget(
     uploadInstructionContent: String? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    contentVariantColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     accentColor: Color = MaterialTheme.colorScheme.primary,
+    errorColor: Color = MaterialTheme.colorScheme.error,
     border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
     shape: Shape = RoundedCornerShape(1.rdp),
 ) {
@@ -114,7 +112,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                     when {
                         border != null && error -> Modifier.border(
                             border.copy(
-                                brush = SolidColor(MaterialTheme.colorScheme.error)
+                                brush = SolidColor(errorColor)
                             ), shape
                         )
 
@@ -178,7 +176,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                     FlowRow(horizontalArrangement = Arrangement.spacedBy(0.5.rdp)) {
                                         Text(
                                             fileState.file.name, color = when (fileState) {
-                                                is FileState.Failed, is FileState.Invalid -> MaterialTheme.colorScheme.error
+                                                is FileState.Failed, is FileState.Invalid -> errorColor
                                                 else -> contentColor
                                             },
                                             style = MaterialTheme.typography.bodyMedium
@@ -190,7 +188,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                                     .getExtensionFromMimeType(fileState.file.mimeType) ?: "",
                                                 HumanReadableBytes.si(fileState.file.size)
                                             ),
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = contentVariantColor,
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
@@ -203,7 +201,7 @@ fun <T: FileInfo> FileFormFieldWidget(
                                             if (fileState is FileState.Complete) {
                                                 Icon(painterResource(R.drawable.ic_delete), contentDescription = "Delete icon", tint = accentColor)
                                             } else {
-                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Invalid icon", tint = MaterialTheme.colorScheme.error)
+                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Invalid icon", tint = errorColor)
                                             }
                                         }
                                         is FileState.Waiting -> IconButton(onClick = { field.removeFile(fileState.file) }) {
@@ -214,11 +212,11 @@ fun <T: FileInfo> FileFormFieldWidget(
                                             IconButton(onClick = {
                                                 field.removeFile(fileState.file)
                                             }) {
-                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Cancel upload icon", tint = MaterialTheme.colorScheme.error)
+                                                Icon(painterResource(R.drawable.ic_close), contentDescription = "Cancel upload icon", tint = errorColor)
                                             }
                                             if (field is RetryableFileFormField<*>) {
                                                 IconButton(onClick = { field.retryFile(fileState.file) }) {
-                                                    Icon(painterResource(R.drawable.ic_retry), "Retry icon", tint = MaterialTheme.colorScheme.error)
+                                                    Icon(painterResource(R.drawable.ic_retry), "Retry icon", tint = errorColor)
                                                 }
                                             }
                                         }

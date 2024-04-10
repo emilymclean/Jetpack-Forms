@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -21,11 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import cl.emilym.form.FormField
+import cl.emilym.form.compose.R
 import cl.emilym.form.field.base.LabeledFormField
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
@@ -40,7 +43,9 @@ fun DateFormFieldWidget(
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = {
+        Icon(painterResource(R.drawable.ic_calendar), contentDescription = "Calendar icon")
+    },
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
@@ -57,10 +62,12 @@ fun DateFormFieldWidget(
     // Must set the disabled fields if replacing
     colors: TextFieldColors = TextFieldDefaults.colors(
         disabledTextColor = LocalContentColor.current,
-    disabledLabelColor =  MaterialTheme.colorScheme.onSurface,
-    disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    disabledPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    disabledSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledLabelColor =  MaterialTheme.colorScheme.onSurface,
+        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+        disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
     )
 ) {
     val value = field.liveValue.collectAsState(null).value?.let {

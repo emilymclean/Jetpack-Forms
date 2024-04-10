@@ -36,21 +36,24 @@ fun <T> RadioFormFieldWidget(
     content: @Composable (String) -> Unit = { Text(it, style = MaterialTheme.typography.bodyMedium) },
 ) {
     val value by field.liveValue.collectAsState(null)
-    val errorMessage by field.errorMessage.collectAsState(null)
 
-    Column(verticalArrangement = Arrangement.spacedBy(0.5.rdp)) {
-        for (option in options) {
-            RadioText(
-                value == option.value,
-                {
-                    field.currentValue = option.value
-                },
-                modifier = modifier,
-                colors = colors,
-                enabled = enabled,
-                isError = errorMessage != null,
-            ) {
-                content(option.label)
+    FormFieldWrapper(
+        field,
+        modifier
+    ) { error ->
+        Column(verticalArrangement = Arrangement.spacedBy(0.5.rdp)) {
+            for (option in options) {
+                RadioText(
+                    value == option.value,
+                    {
+                        field.currentValue = option.value
+                    },
+                    colors = colors,
+                    enabled = enabled,
+                    isError = error,
+                ) {
+                    content(option.label)
+                }
             }
         }
     }

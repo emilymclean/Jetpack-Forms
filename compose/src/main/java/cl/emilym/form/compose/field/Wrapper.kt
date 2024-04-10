@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -39,9 +41,8 @@ fun <T> FormFieldWrapper(
     ) {
         delegate(errorMessage != null)
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(
-                0.5.rdp
-            ),
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(
                 0.5.rdp,
                 Alignment.CenterVertically
@@ -54,7 +55,7 @@ fun <T> FormFieldWrapper(
                     }
                 }
             }
-            Box {}
+            Box(Modifier.width(1.rdp))
             bottomLabel()
         }
     }

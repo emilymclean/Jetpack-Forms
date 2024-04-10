@@ -63,12 +63,7 @@ fun TextFormFieldWidget(
         modifier,
         bottomLabel = {
             if (characterLimit > 0) {
-                Box(
-                    Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    characterLimitDisplay(characterLimit, value?.length ?: 0)
-                }
+                characterLimitDisplay(characterLimit, value?.length ?: 0)
             }
         }
     ) { error ->

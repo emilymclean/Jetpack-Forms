@@ -5,12 +5,15 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cl.emilym.bytes.HumanReadableBytes
 import cl.emilym.form.compose.FormFieldLockup
 import cl.emilym.form.compose.field.SingleCheckboxFormFieldWidget
 import cl.emilym.form.compose.field.DateFormFieldWidget
@@ -27,10 +30,15 @@ import cl.emilym.form.field.NumberFormField
 import cl.emilym.form.field.SingleSelectionFormField
 import cl.emilym.form.field.TextFormField
 import cl.emilym.form.field.file.LazyFileFormField
+import cl.emilym.form.form.SimpleForm
+import cl.emilym.form.validator.BlankValidator
 import cl.emilym.form.validator.CharacterMaximumValidator
+import cl.emilym.form.validator.EnforceValueValidator
 import cl.emilym.form.validator.RequiredValidator
 import cl.emilym.form.validator.file.FileCountValidator
 import cl.emilym.form.validator.file.FileMimeTypeValidator
+import cl.emilym.form.validator.file.FileSizeValidator
+import kotlinx.coroutines.runBlocking
 import java.text.DateFormat
 
 class MainActivity : AppCompatActivity() {
@@ -43,17 +51,39 @@ class MainActivity : AppCompatActivity() {
             SelectionOption(3, "Three"),
         )
 
-        val textFormField = TextFormField("testText", listOf(CharacterMaximumValidator(100)))
+        val fileSize = 1000000L
+
+        val textFormField = TextFormField("testText", listOf(
+            CharacterMaximumValidator(100),
+            RequiredValidator(),
+            BlankValidator(),
+            EnforceValueValidator("Must enter \"pog\"", "pog")
+        ))
         val checkboxFormField = CheckboxFormField("testCheckbox", listOf(RequiredValidator()))
         val dateFormField = DateFormField("testDate", listOf(), DateFormat.getDateInstance())
         val numberFormField = NumberFormField<Int>("testNumber", listOf())
         val multipleSelectionFormField = MultipleSelectionFormField<Int>("testMultiple", listOf())
-        val singleSelectionFormField = SingleSelectionFormField<Int>("testSingle", listOf())
+        val singleSelectionFormField = SingleSelectionFormField<Int>("testSingle", listOf(
+            EnforceValueValidator("Must select \"One\"", 1)
+        ))
         val fileFormField = LazyFileFormField(
             "testFiles",
-            listOf(FileMimeTypeValidator(listOf("image/jpeg", "image/png"))),
+            listOf(FileMimeTypeValidator(listOf("image/jpeg", "image/png")), FileSizeValidator(fileSize)),
             listOf(FileCountValidator(1, 5, "Must have between 1 and 5 files")),
         )
+
+        val form = SimpleForm(
+            listOf(
+                textFormField,
+                checkboxFormField,
+                dateFormField,
+                numberFormField,
+                multipleSelectionFormField,
+                singleSelectionFormField,
+                fileFormField
+            )
+        )
+
 
         setContent {
             Column(
@@ -124,7 +154,20 @@ class MainActivity : AppCompatActivity() {
                 FormFieldLockup(fileFormField.name) {
                     FileFormFieldWidget(
                         fileFormField,
+                        uploadInstructionContent =
+                            "Your files must be a JPG, GIF, PDF or PNG under ${HumanReadableBytes.si(fileSize)}"
                     )
+                }
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        runBlocking {
+                            form.validate(false)
+                        }
+                    }
+                ) {
+                    Text("Submit")
                 }
             }
         }

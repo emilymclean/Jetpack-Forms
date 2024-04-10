@@ -33,28 +33,31 @@ fun <T> MultipleCheckboxFormFieldWidget(
     content: @Composable (String) -> Unit = { Text(it, style = MaterialTheme.typography.bodyMedium) },
 ) {
     val value by field.liveValue.collectAsState(null)
-    val errorMessage by field.errorMessage.collectAsState(null)
 
-    Column(verticalArrangement = Arrangement.spacedBy(0.5.rdp)) {
-        for (option in options) {
-            CheckboxText(
-                value?.contains(option.value) ?: false,
-                {
-                    field.currentValue = if (it) {
-                        (field.currentValue ?: listOf())
-                            .toMutableSet()
-                            .apply { add(option.value) }
-                            .toList()
-                    } else {
-                        (field.currentValue ?: listOf()).filterNot { it == option.value }
-                    }
-                },
-                modifier = modifier,
-                colors = colors,
-                enabled = enabled,
-                isError = errorMessage != null,
-            ) {
-                content(option.label)
+    FormFieldWrapper(
+        field,
+        modifier = modifier
+    ) { error ->
+        Column(verticalArrangement = Arrangement.spacedBy(0.5.rdp)) {
+            for (option in options) {
+                CheckboxText(
+                    value?.contains(option.value) ?: false,
+                    {
+                        field.currentValue = if (it) {
+                            (field.currentValue ?: listOf())
+                                .toMutableSet()
+                                .apply { add(option.value) }
+                                .toList()
+                        } else {
+                            (field.currentValue ?: listOf()).filterNot { it == option.value }
+                        }
+                    },
+                    colors = colors,
+                    enabled = enabled,
+                    isError = error,
+                ) {
+                    content(option.label)
+                }
             }
         }
     }

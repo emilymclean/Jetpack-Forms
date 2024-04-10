@@ -29,15 +29,17 @@ fun SingleCheckboxFormFieldWidget(
     content: @Composable () -> Unit,
 ) {
     val value by field.liveValue.collectAsState(null)
-    val errorMessage by field.errorMessage.collectAsState(null)
-    CheckboxText(
-        value ?: false,
-        { field.currentValue = it },
-        modifier = modifier,
-        colors = colors,
-        enabled = enabled,
-        isError = errorMessage != null,
-    ) {
-        content()
+
+    FormFieldWrapper(field, modifier) { error ->
+        CheckboxText(
+            value ?: false,
+            { field.currentValue = it },
+            modifier = modifier,
+            colors = colors,
+            enabled = enabled,
+            isError = error,
+        ) {
+            content()
+        }
     }
 }

@@ -55,6 +55,7 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
         set(value) {
             field = value
             _liveState.tryEmit(field)
+            doValidation(errorMessage.value == null)
         }
     override val currentState: List<FileState<T>> get() = _currentState
 
@@ -68,7 +69,7 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
         }
     final override val liveValue: Flow<List<Uri>?> = liveState.map { it.mapNotNull { toUri(it.file) } }
 
-    override suspend fun validate(silent: Boolean): Boolean {
+    override fun doValidation(silent: Boolean): Boolean {
         val fileValidationResults = currentState.map { fileState ->
             fileValidators.map { it.validate(fileState.file) }
         }.flatten().filterIsInstance<ValidationResult.Invalid>()
