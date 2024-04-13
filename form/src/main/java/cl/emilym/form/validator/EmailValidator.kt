@@ -5,6 +5,11 @@ import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 import java.util.regex.Pattern
 
+/**
+ * Validator implementation for checking if a String is a valid email.
+ *
+ * @param message The error message to use for invalid values (default: "Email is invalid").
+ */
 class EmailValidator(
     private val message: String = "Email is invalid"
 ): Validator<String> {

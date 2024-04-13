@@ -3,6 +3,17 @@ package cl.emilym.form.validator
 import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 
+/**
+ * Validator implementation for validating numbers within a specified range.
+ *
+ * Either `maximum` and/or `minimum` must be set.
+ *
+ * @param T The type of number to validate (must be a Number and Comparable<T>).
+ * @param message The error message to use for invalid numbers.
+ * @param maximum The maximum allowed number (optional, defaults to null).
+ * @param minimum The minimum allowed number (optional, defaults to null).
+ * @throws IllegalArgumentException if both maximum and minimum are null.
+ */
 class NumberPeriodValidator<T>(
     private val message: String,
     private val maximum: T? = null,

@@ -6,8 +6,14 @@ import cl.emilym.form.Validator
 import kotlinx.coroutines.sync.Mutex
 
 /**
- * LazyFileFormField returns the local URI of a file, expecting whatever consumes it to upload it
- * or process it as needed
+ * Represents a form field for "lazy" file upload. In this context, lazy means the form will maintain
+ * a local reference to the file, but the responsibility for uploading/handling it lies with the
+ * consumer. This is in contrast to the "eager" file upload, which immediately uploads/handles the file.
+ *
+ * @property name The name of the form field.
+ * @property fileValidators List of validators for individual files.
+ * @property filesValidators List of validators for the entire file selection.
+ * @property singleThread Indicates if file operations should be performed on a single thread.
  */
 class LazyFileFormField(
     override val name: String,
