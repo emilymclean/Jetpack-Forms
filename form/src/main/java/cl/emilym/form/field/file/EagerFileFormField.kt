@@ -76,7 +76,7 @@ class EagerFileFormField(
         updateState {
             it.replace(state) {
                 it.file == state.file
-            }.also { print(it) }
+            }
         }
     }
 
