@@ -59,17 +59,8 @@ interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
      */
     fun removeFile(file: T)
 
-    /**
-     * The range of file counts required by this form field.
-     */
     val fileCountRequired: IntRange?
-    /**
-     * The range of file sizes accepted by this form field.
-     */
     val fileSize: LongRange?
-    /**
-     * The list of acceptable MIME types for files in this form field.
-     */
     val acceptableMimeTypes: List<String>?
 
 }

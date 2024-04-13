@@ -11,9 +11,6 @@ import kotlinx.coroutines.runBlocking
  */
 abstract class InputFormField<T>: BaseFormField<T>() {
 
-    /**
-     * The initial value of the form field.
-     */
     protected open val initialValue: T? = null
 
     override var currentValue: T? = initialValue
