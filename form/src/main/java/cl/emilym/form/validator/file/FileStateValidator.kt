@@ -5,6 +5,12 @@ import cl.emilym.form.Validator
 import cl.emilym.form.field.file.FileInfo
 import cl.emilym.form.field.file.FileState
 
+/**
+ * Validator implementation for validating the states of files.
+ *
+ * @param T The type of file to validate (must be FileInfo).
+ * @param message The error message to use for invalid file states (default: "Files must be valid and uploaded").
+ */
 class FileStateValidator<T: FileInfo>(
     val message: String = "Files must be valid and uploaded"
 ): Validator<List<FileState<T>>> {

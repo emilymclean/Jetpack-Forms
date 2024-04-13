@@ -3,6 +3,11 @@ package cl.emilym.form.validator
 import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 
+/**
+ * Validator implementation for validating URLs.
+ *
+ * @param message The error message to use for invalid URLs (default: "Invalid website").
+ */
 class URLValidator(
     private val message: String = "Invalid website"
 ): Validator<String> {

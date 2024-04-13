@@ -4,6 +4,16 @@ import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 import java.util.*
 
+/**
+ * Validator implementation for checking if date is before, after, or between specified dates.
+ *
+ * Either maximum and/or minimum must be set.
+ *
+ * @param message The error message to use for invalid dates.
+ * @param maximum The latest date the value can be (optional, defaults to null).
+ * @param minimum The earliest date the value can be (optional, defaults to null).
+ * @throws IllegalArgumentException if both maximum and minimum are null.
+ */
 class DatePeriodValidator(
     private val message: String,
     private val maximum: Date? = null,
