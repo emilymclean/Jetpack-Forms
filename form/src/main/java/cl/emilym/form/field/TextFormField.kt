@@ -4,6 +4,12 @@ import cl.emilym.form.Validator
 import cl.emilym.form.field.base.InputFormField
 import cl.emilym.form.validator.*
 
+/**
+ * Represents a form field for entering text.
+ *
+ * @property name The name of the form field.
+ * @property validators List of validators for the text value.
+ */
 class TextFormField(
     override val name: String,
     override val validators: List<Validator<String>>,
