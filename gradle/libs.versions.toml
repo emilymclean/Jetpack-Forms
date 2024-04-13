@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-bytes = "0.2.0"
+bytes = "1.0.0"
 form = "0.3.0"
 kotlinReflect = "1.9.23"
 kotlin = "1.9.0"
