@@ -7,7 +7,7 @@ import cl.emilym.form.Validator
  * Validator implementation for Australian Business Numbers (ABNs).
  *
  * @param message The error message to use for invalid ABNs (default: "Invalid ABN").
- * @see https://abr.business.gov.au/Help/AbnFormat
+ * @see [https://abr.business.gov.au/Help/AbnFormat]
  */
 class ABNValidator(
     private val message: String = "Invalid ABN"

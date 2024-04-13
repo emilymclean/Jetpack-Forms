@@ -8,6 +8,7 @@ import cl.emilym.form.Validator
  *
  * @param maximum The maximum allowable number of characters.
  */
+@Deprecated("Use CharacterCountPeriodValidator")
 class CharacterMaximumValidator(
     val maximum: Int
 ): Validator<String> {

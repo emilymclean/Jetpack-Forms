@@ -7,7 +7,7 @@ import java.util.*
 /**
  * Validator implementation for checking if date is before, after, or between specified dates.
  *
- * Either maximum and/or minimum must be set.
+ * Either `maximum` and/or `minimum` must be set.
  *
  * @param message The error message to use for invalid dates.
  * @param maximum The latest date the value can be (optional, defaults to null).

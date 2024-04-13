@@ -6,7 +6,7 @@ import cl.emilym.form.Validator
 /**
  * Validator implementation for validating numbers within a specified range.
  *
- * Either maximum and/or minimum must be set.
+ * Either `maximum` and/or `minimum` must be set.
  *
  * @param T The type of number to validate (must be a Number and Comparable<T>).
  * @param message The error message to use for invalid numbers.
