@@ -21,31 +21,93 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.lang.UnsupportedOperationException
 
+/**
+ * Represents a form field for files.
+ *
+ * @param T The type of file information this form field operates on.
+ */
 interface FileFormField<T: FileInfo>: FormField<List<Uri>> {
 
+    /**
+     * The current state of the form field.
+     */
     val currentState: List<FileState<T>>
+    /**
+     * A flow representing the current state of the form field.
+     */
     val liveState: Flow<List<FileState<T>>>
 
+    /**
+     * Adds a file to the form field.
+     *
+     * @param file The file to add.
+     */
     fun addFile(file: T)
+
+    /**
+     * Adds a file to the form field.
+     *
+     * @param uri The URI of the file to add.
+     * @param contentResolver The content resolver to use for file operations.
+     */
     fun addFile(uri: Uri, contentResolver: ContentResolver)
+
+    /**
+     * Removes a file from the form field.
+     *
+     * @param file The file to remove.
+     */
     fun removeFile(file: T)
 
+    /**
+     * The range of file counts required by this form field.
+     */
     val fileCountRequired: IntRange?
+    /**
+     * The range of file sizes accepted by this form field.
+     */
     val fileSize: LongRange?
+    /**
+     * The list of acceptable MIME types for files in this form field.
+     */
     val acceptableMimeTypes: List<String>?
 
 }
 
+/**
+ * Represents a form field for retryable file operations.
+ *
+ * @param T The type of file information this form field operates on.
+ */
 interface RetryableFileFormField<T: FileInfo> {
 
+    /**
+     * Retries a file operation.
+     *
+     * @param file The file to retry.
+     */
     fun retryFile(file: FileInfo)
 
 }
 
+/**
+ * Represents a base form field for files.
+ *
+ * @param T The type of file information this form field operates on.
+ */
 abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileFormField<T> {
 
+    /**
+     * The list of validators for individual files.
+     */
     abstract val fileValidators: List<Validator<T>>
+    /**
+     * The list of validators for the entire file selection.
+     */
     abstract val filesValidators: List<Validator<List<T>>>
+    /**
+     * The list of validators for the state of files.
+     */
     open val stateValidators: List<Validator<List<FileState<T>>>> = listOf(FileStateValidator())
 
     final override val validators: List<Validator<List<Uri>>>
@@ -81,6 +143,12 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
         return presentValidation(fileValidationResults + filesValidationResults + stateValidationResults, silent)
     }
 
+    /**
+     * Validates a file and returns an error message if invalid.
+     *
+     * @param file The file to validate.
+     * @return The error message if invalid, null otherwise.
+     */
     protected fun fileValid(file: T): String? {
         return fileValidators.map { it.validate(file) }
             .filterIsInstance<ValidationResult.Invalid>()
@@ -107,13 +175,30 @@ abstract class BaseFileFormField<T: FileInfo>: BaseFormField<List<Uri>>(), FileF
 
 }
 
+/**
+ * Represents a concurrent-safe base form field for files.
+ *
+ * @param T The type of file information this form field operates on.
+ */
 abstract class ConcurrentBaseFileFormField<T: FileInfo>(): BaseFileFormField<T>() {
 
+    /**
+     * Indicates whether file operations should be performed on a single thread.
+     */
     protected open val singleThread: Boolean = false
 
+    /**
+     * The coroutine scope for concurrent operations.
+     */
     protected open val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job())
     private val stateLock = Mutex()
 
+    /**
+     * Updates the state of the form field.
+     *
+     * @param afterUpdate Callback function to be executed after the update.
+     * @param operation The operation to perform on the state.
+     */
     protected fun updateState(afterUpdate: () -> Unit = {}, operation: (List<FileState<T>>) -> List<FileState<T>>) {
         val task = {
             _currentState = operation(_currentState)

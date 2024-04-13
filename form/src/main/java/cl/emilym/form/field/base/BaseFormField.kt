@@ -5,6 +5,11 @@ import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 import kotlinx.coroutines.flow.MutableStateFlow
 
+/**
+ * An abstract class representing a base form field that implements the FormField interface.
+ *
+ * @param T The type of value this form field can hold.
+ */
 abstract class BaseFormField<T>: FormField<T> {
 
     override val isValid = MutableStateFlow(false)
@@ -16,6 +21,12 @@ abstract class BaseFormField<T>: FormField<T> {
         return doValidation(silent)
     }
 
+    /**
+     * Performs the actual validation using the defined validators.
+     *
+     * @param silent If true, validation will be performed without emitting validation errors.
+     * @return True if the form field is valid, false otherwise.
+     */
     protected open fun doValidation(silent: Boolean): Boolean {
         val failed = validators
             .map { it.validate(currentValue) }
@@ -23,6 +34,13 @@ abstract class BaseFormField<T>: FormField<T> {
         return presentValidation(failed, silent)
     }
 
+    /**
+     * Handles presenting validation results.
+     *
+     * @param failed List of failed validation results.
+     * @param silent If true, validation errors will not be emitted.
+     * @return True if the form field is valid, false otherwise.
+     */
     protected fun presentValidation(
         failed: List<ValidationResult.Invalid>,
         silent: Boolean
