@@ -9,6 +9,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.lang.IllegalArgumentException
 
 class FileCountValidatorTest {
 
@@ -57,8 +58,8 @@ class FileCountValidatorTest {
     }
 
     @Test
-    fun `init with null minimum and maximum throws IllegalStateException`() {
-        assertThrows(IllegalStateException::class.java) {
+    fun `init with null minimum and maximum throws IllegalArgumentException`() {
+        assertThrows(IllegalArgumentException::class.java) {
             FileCountValidator<FileInfo>(minimum = null, maximum = null, message = "Invalid file count")
         }
     }
