@@ -4,7 +4,7 @@ import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 
 /**
- * Validator implementation for checking if a string value less than a specified number of characters.
+ * Validator implementation for checking if a string value is less than a specified number of characters.
  *
  * @param maximum The maximum allowable number of characters.
  */

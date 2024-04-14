@@ -6,7 +6,7 @@ import cl.emilym.form.Validator
 
 /**
  * Represents a form field for "eager" file upload. In this context, eager means the form will immediately
- * upload the selected file to a server, through th provided controller. This is in contrast to the "lazy"
+ * upload/process the selected file, through the provided controller. This is in contrast to the "lazy"
  * file upload, which waits until form submission.
  *
  * @property name The name of the form field.
