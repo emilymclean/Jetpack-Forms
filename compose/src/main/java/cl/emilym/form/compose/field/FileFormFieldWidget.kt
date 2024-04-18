@@ -52,7 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cl.emilym.bytes.HumanReadableBytes
-import cl.emilym.component.compose.rdp
+import cl.emilym.compose.units.rdp
 import cl.emilym.form.compose.R
 import cl.emilym.form.field.file.FileFormField
 import cl.emilym.form.field.file.FileInfo

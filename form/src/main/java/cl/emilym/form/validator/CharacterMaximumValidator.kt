@@ -3,6 +3,12 @@ package cl.emilym.form.validator
 import cl.emilym.form.ValidationResult
 import cl.emilym.form.Validator
 
+/**
+ * Validator implementation for checking if a string value is less than a specified number of characters.
+ *
+ * @param maximum The maximum allowable number of characters.
+ */
+@Deprecated("Use CharacterCountPeriodValidator")
 class CharacterMaximumValidator(
     val maximum: Int
 ): Validator<String> {

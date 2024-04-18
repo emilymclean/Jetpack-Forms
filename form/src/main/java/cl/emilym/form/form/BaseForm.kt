@@ -7,6 +7,9 @@ import cl.emilym.form.FormInitializer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
+/**
+ * Abstract base class for implementing the Form interface.
+ */
 abstract class BaseForm: Form {
 
     abstract val fields: List<FormField<*>>

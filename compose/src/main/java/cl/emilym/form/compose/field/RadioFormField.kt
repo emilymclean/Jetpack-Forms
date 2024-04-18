@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import cl.emilym.component.compose.rdp
+import cl.emilym.compose.units.rdp
 import cl.emilym.form.FormField
 import cl.emilym.form.compose.helper.CheckboxText
 import cl.emilym.form.compose.helper.RadioText

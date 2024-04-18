@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-bytes = "0.2.0"
+bytes = "1.1.0"
 form = "0.3.0"
 kotlinReflect = "1.9.23"
 kotlin = "1.9.0"
@@ -17,7 +17,7 @@ dokkaVersion = "1.9.20"
 mockitoCore = "5.11.0"
 mockitoKotlin = "5.2.1"
 sonatypePublish = "1.2.3"
-componentCompose = "0.2.1"
+composeUnits = "1.0.1"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 
@@ -41,7 +41,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-component-compose = { group = "cl.emilym.component", name = "compose" , version.ref = "componentCompose"}
+compose-units = { group = "cl.emilym.compose", name = "units" , version.ref = "composeUnits" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
