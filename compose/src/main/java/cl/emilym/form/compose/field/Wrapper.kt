@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import cl.emilym.component.compose.rdp
+import cl.emilym.compose.units.rdp
 import cl.emilym.form.FormField
 import cl.emilym.form.compose.LocalFormConfig
 
